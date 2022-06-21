@@ -4,6 +4,8 @@ import styled from "styled-components";
 import AirbnbLogoIcon from "../public/static/svg/logo/logo.svg";
 import AirbnbLogoTextIcon from "../public/static/svg/logo/logo_text.svg";
 import palette from "../styles/palette";
+import SignUpModal from "./auth/SignUpModal";
+import ModalPortal from "./MordalPortal";
 
 const Conatainer = styled.div`
   position: sticky;
@@ -56,16 +58,31 @@ const HeadSingUpButton = styled.button`
 `;
 
 const ModalWrapper = styled.div`
-
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
 `;
 
 const ModalBackground = styled.div`
-
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 10;
 `;
 
-const ModalContents = styled.div``;
+const ModalContents = styled.div`
+  width: 400px;
+  height: 400px;
+  background-color: white;
+  z-index: 11;
+`;
 
-// eslint-disable-next-line react/function-component-definition
 const Header: React.FC = () => {
   // modal
   const [showModal, setShowModal] = useState(false);
@@ -94,6 +111,11 @@ const Header: React.FC = () => {
           />
           <ModalContents />
         </ModalWrapper>
+      )}
+      {showModal && (
+        <ModalPortal closePortal={() => setShowModal(false)}>
+          <SignUpModal />
+        </ModalPortal>
       )}
     </Conatainer>
   );
