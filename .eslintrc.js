@@ -10,6 +10,7 @@ module.exports = {
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
+    JSX: true
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -48,6 +49,7 @@ module.exports = {
     "import/prefer-default-export": "off", //export default 를 사용하라.
     "no-param-reassign": "off",
     "react/jsx-curly-newline": "off", // jsx안에 }를 새로운 라인에 사용할 수 있다.
+    "react/require-default-props": "off",
     "react/jsx-filename-extension": [
       1,
       { extensions: [".js", ".jsx", ".tsx"] }, //jsx사용가능한 확장자 설정
