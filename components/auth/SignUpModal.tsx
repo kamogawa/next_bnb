@@ -5,7 +5,10 @@ import PersonIcon from "../../public/static/svg/auth/person.svg";
 import OpenedEyeIcon from "../../public/static/svg/auth/opened_eye.svg";
 import ClosedEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
 import CloseXIcon from "../../public/static/svg/modal/modal_close_x_icon.svg";
-import Input from "../common/input";
+import Input from "../common/Input";
+import palette from "../../styles/palette";
+import Selector from "../common/Selector";
+import { monthsList } from "../../lib/staticData";
 
 const Container = styled.div`
   width: 568px;
@@ -18,6 +21,18 @@ const Container = styled.div`
     cursor: pointer;
     display: block;
     margin: 0 0 40px auto;
+  }
+
+  .sign-up-birthday-label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .sign-up-modal-birthday-info {
+    margin-bottom: 16px;
+    color: ${palette.charcoal};
   }
 `;
 
@@ -100,6 +115,11 @@ const SignUpModal: React.FC = () => {
           onChange={onChangePassword}
         />
       </InputWrapper>
+      <p className="sign-up-birthday-label">誕生日</p>
+      <p className="sign-up-modal-birthday-info">
+        ご登録は18歳以上の方に限ります。 誕生日がほかのAirbnbユーザーに見られることはありません。
+      </p>
+      <Selector options={monthsList} disabledOptions={["月"]} defaultValue="月" />
     </Container>
   );
 };
