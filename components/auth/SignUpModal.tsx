@@ -8,7 +8,8 @@ import CloseXIcon from "../../public/static/svg/modal/modal_close_x_icon.svg";
 import Input from "../common/Input";
 import palette from "../../styles/palette";
 import Selector from "../common/Selector";
-import { monthsList } from "../../lib/staticData";
+import { daysList, monthsList, yearsList } from "../../lib/staticData";
+import Button from "../common/Button";
 
 const Container = styled.div`
   width: 568px;
@@ -34,6 +35,28 @@ const Container = styled.div`
     margin-bottom: 16px;
     color: ${palette.charcoal};
   }
+
+  .sign-up-modal-birthday-selectors {
+    display: flex;
+    margin-bottom: 24px;
+    .sign-up-modal-birthday-month-selector {
+      margin-right: 16px;
+      flex-grow: 1;
+    }
+    .sign-up-modal-birthday-day-selector {
+      margin-right: 16px;
+      width: 25%;
+    }
+    .sign-up-modal-birthday-year-selector {
+      width: 33%;
+    }
+  }
+
+  .sing-up-modal-submit-button-wrapper {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid ${palette.gray_eb};
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -50,6 +73,9 @@ const SignUpModal: React.FC = () => {
   const [firstname, setFirstname] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [birthDay, setBirthDay] = useState<string | undefined>();
+  const [birthMonth, setBirthMonth] = useState<string | undefined>();
+  const [birthYear, setBirthYear] = useState<string | undefined>();
 
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -69,6 +95,18 @@ const SignUpModal: React.FC = () => {
 
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
+  };
+
+  const onChangeBirthDay = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setBirthDay(event.target.value);
+  };
+
+  const onChangeBirthMonth = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setBirthMonth(event.target.value);
+  };
+
+  const onChangeBirthYear = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setBirthYear(event.target.value);
   };
 
   return (
@@ -119,7 +157,38 @@ const SignUpModal: React.FC = () => {
       <p className="sign-up-modal-birthday-info">
         ご登録は18歳以上の方に限ります。 誕生日がほかのAirbnbユーザーに見られることはありません。
       </p>
-      <Selector options={monthsList} disabledOptions={["月"]} defaultValue="月" />
+      <div className="sign-up-modal-birthday-selectors">
+        <div className="sign-up-modal-birthday-month-selector">
+          <Selector
+            options={monthsList}
+            disabledOptions={["月"]}
+            defaultValue="月"
+            onChange={onChangeBirthMonth}
+            value={birthMonth}
+          />
+        </div>
+        <div className="sign-up-modal-birthday-day-selector">
+          <Selector
+            options={daysList}
+            disabledOptions={["日"]}
+            defaultValue="日"
+            onChange={onChangeBirthDay}
+            value={birthDay}
+          />
+        </div>
+        <div className="sign-up-modal-birthday-year-selector">
+          <Selector
+            options={yearsList}
+            disabledOptions={["年"]}
+            defaultValue="年"
+            onChange={onChangeBirthYear}
+            value={birthYear}
+          />
+        </div>
+      </div>
+      <div className="sing-up-modal-submit-button-wrapper">
+        <Button type="submit">登録する</Button>
+      </div>
     </Container>
   );
 };
