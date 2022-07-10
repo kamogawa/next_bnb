@@ -17,4 +17,4 @@ export const monthsList = [
 export const daysList = Array.from(Array(31), (_, i) => String(i + 1));
 
 //* 2020년부터 1900년까지
-export const yearsList = Array.from(Array(121), (_, i) => String(202 - i));
+export const yearsList = Array.from(Array(121), (_, i) => String(2022 - i));

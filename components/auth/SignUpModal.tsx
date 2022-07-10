@@ -10,6 +10,7 @@ import palette from "../../styles/palette";
 import Selector from "../common/Selector";
 import { daysList, monthsList, yearsList } from "../../lib/staticData";
 import Button from "../common/Button";
+import { signupAPI } from "../../lib/api/auth";
 
 const Container = styled.div`
   width: 568px;
@@ -109,86 +110,107 @@ const SignUpModal: React.FC = () => {
     setBirthYear(event.target.value);
   };
 
+  const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const singUpBody = {
+        email,
+        lastname,
+        firstname,
+        password,
+        birthDay: new Date(
+          `${birthYear}-${birthMonth!.replace("月", "")}-${birthDay}`
+        ),
+      };
+      await signupAPI(singUpBody);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Container>
-      <CloseXIcon className="modal-close-x-icon" />
-      <InputWrapper>
-        <Input
-          placeholder="email"
-          type="email"
-          icon={<MailIcon />}
-          name="email"
-          value={email}
-          onChange={onChangeEmail}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <Input
-          placeholder="名(例:太郎)"
-          icon={<PersonIcon />}
-          value={lastname}
-          onChange={onChangeLastname}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <Input
-          placeholder="姓(例:山田)"
-          icon={<PersonIcon />}
-          value={firstname}
-          onChange={onChangeFirstname}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <Input
-          placeholder="パスワード"
-          type={hidePassword ? "password" : "text"}
-          icon={
-            hidePassword ? (
-              <ClosedEyeIcon onClick={toggleHidePassword} />
-            ) : (
-              <OpenedEyeIcon onClick={toggleHidePassword} />
-            )
-          }
-          value={password}
-          onChange={onChangePassword}
-        />
-      </InputWrapper>
-      <p className="sign-up-birthday-label">誕生日</p>
-      <p className="sign-up-modal-birthday-info">
-        ご登録は18歳以上の方に限ります。 誕生日がほかのAirbnbユーザーに見られることはありません。
-      </p>
-      <div className="sign-up-modal-birthday-selectors">
-        <div className="sign-up-modal-birthday-month-selector">
-          <Selector
-            options={monthsList}
-            disabledOptions={["月"]}
-            defaultValue="月"
-            onChange={onChangeBirthMonth}
-            value={birthMonth}
+      <form onSubmit={onSubmitSignUp}>
+        <CloseXIcon className="modal-close-x-icon" />
+        <InputWrapper>
+          <Input
+            placeholder="email"
+            type="email"
+            icon={<MailIcon />}
+            name="email"
+            value={email}
+            onChange={onChangeEmail}
           />
-        </div>
-        <div className="sign-up-modal-birthday-day-selector">
-          <Selector
-            options={daysList}
-            disabledOptions={["日"]}
-            defaultValue="日"
-            onChange={onChangeBirthDay}
-            value={birthDay}
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            placeholder="名(例:太郎)"
+            icon={<PersonIcon />}
+            value={lastname}
+            onChange={onChangeLastname}
           />
-        </div>
-        <div className="sign-up-modal-birthday-year-selector">
-          <Selector
-            options={yearsList}
-            disabledOptions={["年"]}
-            defaultValue="年"
-            onChange={onChangeBirthYear}
-            value={birthYear}
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            placeholder="姓(例:山田)"
+            icon={<PersonIcon />}
+            value={firstname}
+            onChange={onChangeFirstname}
           />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            placeholder="パスワード"
+            type={hidePassword ? "password" : "text"}
+            icon={
+              hidePassword ? (
+                <ClosedEyeIcon onClick={toggleHidePassword} />
+              ) : (
+                <OpenedEyeIcon onClick={toggleHidePassword} />
+              )
+            }
+            value={password}
+            onChange={onChangePassword}
+          />
+        </InputWrapper>
+        <p className="sign-up-birthday-label">誕生日</p>
+        <p className="sign-up-modal-birthday-info">
+          ご登録は18歳以上の方に限ります。 誕生日がほかのAirbnbユーザーに見られることはありません。
+        </p>
+        <div className="sign-up-modal-birthday-selectors">
+          <div className="sign-up-modal-birthday-month-selector">
+            <Selector
+              options={monthsList}
+              disabledOptions={["月"]}
+              defaultValue="月"
+              onChange={onChangeBirthMonth}
+              value={birthMonth}
+            />
+          </div>
+          <div className="sign-up-modal-birthday-day-selector">
+            <Selector
+              options={daysList}
+              disabledOptions={["日"]}
+              defaultValue="日"
+              onChange={onChangeBirthDay}
+              value={birthDay}
+            />
+          </div>
+          <div className="sign-up-modal-birthday-year-selector">
+            <Selector
+              options={yearsList}
+              disabledOptions={["年"]}
+              defaultValue="年"
+              onChange={onChangeBirthYear}
+              value={birthYear}
+            />
+          </div>
         </div>
-      </div>
-      <div className="sing-up-modal-submit-button-wrapper">
-        <Button type="submit">登録する</Button>
-      </div>
+        <div className="sing-up-modal-submit-button-wrapper">
+          <Button type="submit">登録する</Button>
+        </div>
+      </form>
     </Container>
   );
 };

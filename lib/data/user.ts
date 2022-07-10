@@ -1,9 +1,10 @@
 import { readFileSync, writeFileSync } from "fs";
-import { useTheme } from "styled-components";
 import { StoredUserType } from "../../types/user";
 
+const userDataPath = `${process.cwd()}/data/users.json`;
+
 const getList = () => {
-  const usersBuffer = readFileSync("data/users.json");
+  const usersBuffer = readFileSync(userDataPath);
   const usersString = usersBuffer.toString();
 
   if (!usersString) {
@@ -19,7 +20,7 @@ const exist = ({ email }: { email: string }) => {
 };
 
 const write = async (users: StoredUserType[]) => {
-  writeFileSync("data/users.json", JSON.stringify(users));
+  writeFileSync(userDataPath, JSON.stringify(users));
 };
 
 export default { getList, exist, write };

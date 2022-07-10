@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { NextApiRequest, NextApiResponse } from "next";
+import jwt from "jsonwebtoken";
 import Data from "../../../lib/data";
 import { SingUpAPIBody } from "../../../types/api/auth";
 import { StoredUserType } from "../../../types/user";
@@ -11,11 +12,13 @@ export default async (req: NextApiRequest, res:NextApiResponse) => {
     }: {
       body: SingUpAPIBody;
     } = req;
-    const { email, firstname, lastname, password, birthday } = body;
-    if (!email || !firstname || !lastname || !password || !birthday) {
+    const { email, firstname, lastname, password, birthDay } = body;
+    if (!email || !firstname || !lastname || !password || !birthDay) {
       res.statusCode = 400;
       return res.send("필수 데이터가 없습니다.");
     }
+    console.log(birthDay);
+
     if (Data.user.exist({ email })) {
       res.statusCode = 409;
       res.send("同録されたユーザーです。");
@@ -37,13 +40,25 @@ export default async (req: NextApiRequest, res:NextApiResponse) => {
       firstname,
       lastname,
       password: hashedPassword,
-      birthday,
+      birthDay,
       profileImage: "/static/image/default_user_profile_image.jpg"
     };
 
     Data.user.write([...users, newUser]);
 
-    return res.end();
+    const token = jwt.sign(String(newUser.id), "test_secret");
+    res.setHeader(
+      "Set-Cookie",
+      `access_token=${token}; Path=/; Expires=${new Date(
+        Date.now() + 60 * 60 * 24 * 1000 * 3 //3일
+      ).toUTCString()}; HttpOnly`
+    );
+
+    const newUserWithoutPassword: Partial<Pick<StoredUserType, "password">> = newUser;
+    delete newUserWithoutPassword.password;
+    res.statusCode = 200;
+
+    return res.send(newUser);
   }
   res.statusCode = 405;
 

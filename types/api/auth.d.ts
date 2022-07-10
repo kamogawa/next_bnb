@@ -3,5 +3,5 @@ export type SingUpAPIBody = {
   firstname: string;
   lastname: string;
   password: string;
-  birthday: Date;
+  birthDay: Date;
 };
