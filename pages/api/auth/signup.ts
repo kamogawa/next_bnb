@@ -17,7 +17,6 @@ export default async (req: NextApiRequest, res:NextApiResponse) => {
       res.statusCode = 400;
       return res.send("필수 데이터가 없습니다.");
     }
-    console.log(birthDay);
 
     if (Data.user.exist({ email })) {
       res.statusCode = 409;
