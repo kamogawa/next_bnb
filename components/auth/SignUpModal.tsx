@@ -13,6 +13,7 @@ import { daysList, monthsList, yearsList } from "../../lib/staticData";
 import Button from "../common/Button";
 import { signupAPI } from "../../lib/api/auth";
 import { userActions } from "../../store/user";
+import useValidateMode from "../../hook/useValidateMode";
 
 const Container = styled.div`
   width: 568px;
@@ -79,7 +80,7 @@ const SignUpModal: React.FC = () => {
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
   const [birthYear, setBirthYear] = useState<string | undefined>();
-  const [validateMode, setValidateMode] = useState(true);
+  const { setValidateMode } = useValidateMode();
 
   const dispatch = useDispatch();
 
@@ -121,7 +122,7 @@ const SignUpModal: React.FC = () => {
     setValidateMode(true);
 
     if (!email || !lastname || !firstname || !password || !birthMonth || !birthYear) {
-      return undefined;
+      return false;
     }
 
     try {
@@ -137,7 +138,7 @@ const SignUpModal: React.FC = () => {
       const { data } = await signupAPI(signUpBody);
       dispatch(userActions.setLoggedUser(data));
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
@@ -153,7 +154,6 @@ const SignUpModal: React.FC = () => {
             name="email"
             value={email}
             onChange={onChangeEmail}
-            validateMode={validateMode}
             useValidation
             isValid={!!email}
             errorMessage="emailを入力してください"
@@ -165,7 +165,6 @@ const SignUpModal: React.FC = () => {
             icon={<PersonIcon />}
             value={lastname}
             onChange={onChangeLastname}
-            validateMode={validateMode}
             useValidation
             isValid={!!lastname}
             errorMessage="名を入力してください"
@@ -177,7 +176,6 @@ const SignUpModal: React.FC = () => {
             icon={<PersonIcon />}
             value={firstname}
             onChange={onChangeFirstname}
-            validateMode={validateMode}
             useValidation
             isValid={!!firstname}
             errorMessage="姓を入力してください"
@@ -196,7 +194,6 @@ const SignUpModal: React.FC = () => {
             }
             value={password}
             onChange={onChangePassword}
-            validateMode={validateMode}
             useValidation
             isValid={!!password}
             errorMessage="パスワードを入力してください"
