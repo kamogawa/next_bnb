@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
@@ -14,10 +14,11 @@ import Button from "../common/Button";
 import { signupAPI } from "../../lib/api/auth";
 import { userActions } from "../../store/user";
 import useValidateMode from "../../hook/useValidateMode";
+import PasswordWarning from "./PasswordWarning";
 
 const Container = styled.div`
   width: 568px;
-  height: 614px;
+  /* height: 614px; */
   padding: 32px;
   background-color: white;
   z-index: 11;
@@ -71,11 +72,15 @@ const InputWrapper = styled.div`
   }
 `;
 
+//パスワード最小桁数
+const PASSWORD_MIN_LENGTH = 8;
+
 const SignUpModal: React.FC = () => {
   const [email, setEmail] = useState("");
   const [lastname, setLastname] = useState("");
   const [firstname, setFirstname] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
@@ -100,9 +105,27 @@ const SignUpModal: React.FC = () => {
     setPassword(event.target.value);
   };
 
+  const onFocusPassword = () => {
+    setPasswordFocused(true);
+  };
+
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
   };
+
+  //パスワード桁数チェック
+  const isPasswordOverMinLength = useMemo(
+    () => password.length >= PASSWORD_MIN_LENGTH,
+    [password]
+  );
+
+  //パスワードに擬号又は数字が含まれているかチェック
+  const isPasswordHasNumberOrSymbol = useMemo(
+    () =>
+      /[{}[\]/?.,;:|)*~`!^\-_+<>@#$%&\\=('"]/g.test(password) ||
+      /[0-9]/g.test(password),
+    [password]
+  );
 
   const onChangeBirthDay = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setBirthDay(event.target.value);
@@ -195,10 +218,20 @@ const SignUpModal: React.FC = () => {
             value={password}
             onChange={onChangePassword}
             useValidation
-            isValid={!!password}
+            isValid={isPasswordHasNumberOrSymbol && isPasswordOverMinLength}
             errorMessage="パスワードを入力してください"
+            onFocus={onFocusPassword}
           />
         </InputWrapper>
+        {passwordFocused && (
+          <>
+            <PasswordWarning isValid={isPasswordOverMinLength} errorMessage="８文字以上"/>
+            <PasswordWarning
+              isValid={isPasswordHasNumberOrSymbol}
+              errorMessage="数字又は記号を含めてください"
+            />
+          </>
+        )}
         <p className="sign-up-birthday-label">誕生日</p>
         <p className="sign-up-modal-birthday-info">
           ご登録は18歳以上の方に限ります。 誕生日がほかのAirbnbユーザーに見られることはありません。
