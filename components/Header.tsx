@@ -60,7 +60,7 @@ const HeadSingUpButton = styled.button`
 const Header: React.FC = () => {
   // modal
   // const [showModal, setShowModal] = useState(false);
-  const { openModal, ModalPortal } = useModal();
+  const { openModal, ModalPortal, closeModal } = useModal();
 
   return (
     <Conatainer>
@@ -79,7 +79,7 @@ const Header: React.FC = () => {
         </HeaderLoginButton>
       </div>
       <ModalPortal>
-        <SignUpModal />
+        <SignUpModal closeModal={closeModal} />
       </ModalPortal>
     </Conatainer>
   );

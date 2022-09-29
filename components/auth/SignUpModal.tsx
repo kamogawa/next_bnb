@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
@@ -16,12 +16,17 @@ import { userActions } from "../../store/user";
 import useValidateMode from "../../hook/useValidateMode";
 import PasswordWarning from "./PasswordWarning";
 
+interface IProps {
+  closeModal: () => void;
+}
+
 const Container = styled.div`
   width: 568px;
   /* height: 614px; */
   padding: 32px;
   background-color: white;
   z-index: 11;
+  border-radius: 10px;
 
   .modal-close-x-icon {
     cursor: pointer;
@@ -62,6 +67,16 @@ const Container = styled.div`
     padding-bottom: 16px;
     border-bottom: 1px solid ${palette.gray_eb};
   }
+
+  .sign-up-modal-login {
+    text-align: center;
+    .sign-up-modal-set-login {
+      text-align: center;
+      color: ${palette.dark_cyan};
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  }
 `;
 
 const InputWrapper = styled.div`
@@ -75,7 +90,7 @@ const InputWrapper = styled.div`
 //パスワード最小桁数
 const PASSWORD_MIN_LENGTH = 8;
 
-const SignUpModal: React.FC = () => {
+const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
   const [email, setEmail] = useState("");
   const [lastname, setLastname] = useState("");
   const [firstname, setFirstname] = useState("");
@@ -139,36 +154,53 @@ const SignUpModal: React.FC = () => {
     setBirthYear(event.target.value);
   };
 
+  //会員登録フォームチェック
+  const validateSignUpForm = () => {
+    if (!email || !lastname || !firstname || !password) {
+      return false;
+    }
+    if (isPasswordHasNumberOrSymbol || isPasswordOverMinLength) {
+      return false;
+    }
+    if (!birthDay || !birthDay || !birthDay) {
+      return false;
+    }
+    return true;
+  };
+
   const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setValidateMode(true);
 
-    if (!email || !lastname || !firstname || !password || !birthMonth || !birthYear) {
-      return false;
-    }
-
-    try {
-      const signUpBody = {
-        email,
-        lastname,
-        firstname,
-        password,
-        birthDay: new Date(
-          `${birthYear}-${birthMonth!.replace("月", "")}-${birthDay}`
-        ),
-      };
-      const { data } = await signupAPI(signUpBody);
-      dispatch(userActions.setLoggedUser(data));
-    } catch (e) {
-      // console.log(e);
+    if (validateSignUpForm()) {
+      try {
+        const signUpBody = {
+          email,
+          lastname,
+          firstname,
+          password,
+          birthDay: new Date(
+            `${birthYear}-${birthMonth!.replace("月", "")}-${birthDay}`
+          ),
+        };
+        const { data } = await signupAPI(signUpBody);
+        dispatch(userActions.setLoggedUser(data));
+        closeModal();
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
+
+  useEffect(() => {
+    setValidateMode(false);
+  }, []);
 
   return (
     <Container>
       <form onSubmit={onSubmitSignUp}>
-        <CloseXIcon className="modal-close-x-icon" />
+        <CloseXIcon className="modal-close-x-icon" onClick={closeModal} />
         <InputWrapper>
           <Input
             placeholder="email"
@@ -225,7 +257,7 @@ const SignUpModal: React.FC = () => {
         </InputWrapper>
         {passwordFocused && (
           <>
-            <PasswordWarning isValid={isPasswordOverMinLength} errorMessage="８文字以上"/>
+            <PasswordWarning isValid={isPasswordOverMinLength} errorMessage="８文字以上" />
             <PasswordWarning
               isValid={isPasswordHasNumberOrSymbol}
               errorMessage="数字又は記号を含めてください"
@@ -244,6 +276,7 @@ const SignUpModal: React.FC = () => {
               defaultValue="月"
               onChange={onChangeBirthMonth}
               value={birthMonth}
+              isValid={!!birthMonth}
             />
           </div>
           <div className="sign-up-modal-birthday-day-selector">
@@ -253,6 +286,7 @@ const SignUpModal: React.FC = () => {
               defaultValue="日"
               onChange={onChangeBirthDay}
               value={birthDay}
+              isValid={!!birthDay}
             />
           </div>
           <div className="sign-up-modal-birthday-year-selector">
@@ -262,12 +296,23 @@ const SignUpModal: React.FC = () => {
               defaultValue="年"
               onChange={onChangeBirthYear}
               value={birthYear}
+              isValid={!!birthYear}
             />
           </div>
         </div>
         <div className="sing-up-modal-submit-button-wrapper">
           <Button type="submit">登録する</Button>
         </div>
+        <p className="sign-up-modal-login">
+          Airbnbアカウントがありますか？
+          <span
+            className="sign-up-modal-set-login"
+            role="presentation"
+            onClick={() => {}}
+          >
+            ログイン
+          </span>
+        </p>
       </form>
     </Container>
   );
