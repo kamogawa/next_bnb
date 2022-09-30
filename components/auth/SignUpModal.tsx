@@ -159,10 +159,10 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
     if (!email || !lastname || !firstname || !password) {
       return false;
     }
-    if (isPasswordHasNumberOrSymbol || isPasswordOverMinLength) {
+    if (!isPasswordHasNumberOrSymbol || !isPasswordOverMinLength) {
       return false;
     }
-    if (!birthDay || !birthDay || !birthDay) {
+    if (!birthMonth || !birthDay || !birthYear) {
       return false;
     }
     return true;
@@ -173,6 +173,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
 
     setValidateMode(true);
 
+    console.log(validateSignUpForm());
     if (validateSignUpForm()) {
       try {
         const signUpBody = {
