@@ -1,13 +1,16 @@
 import Link from "next/link";
 import React from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 import AirbnbLogoIcon from "../public/static/svg/logo/logo.svg";
 import AirbnbLogoTextIcon from "../public/static/svg/logo/logo_text.svg";
 import HamburgerIcon from "../public/static/svg/header/hamburger.svg";
 import palette from "../styles/palette";
-import SignUpModal from "./auth/SignUpModal";
+// import SignUpModal from "./auth/SignUpModal";
 import useModal from "../hook/useModal";
 import { useSelector } from "../store";
+import { authActions } from "../store/auth";
+import AuthModal from "./auth/AuthModal";
 
 const Conatainer = styled.div`
   position: sticky;
@@ -60,7 +63,7 @@ const HeadSingUpButton = styled.button`
 `;
 
 const HeaderUserProfile = styled.button`
-      display: flex;
+    display: flex;
     align-items: center;
     height: 42px;
     padding: 0 6px 0 16px;
@@ -86,6 +89,7 @@ const Header: React.FC = () => {
   // const [showModal, setShowModal] = useState(false);
   const { openModal, ModalPortal, closeModal } = useModal();
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   return (
     <Conatainer>
@@ -97,11 +101,23 @@ const Header: React.FC = () => {
       </Link>
       {!user.isLogged && (
         <div>
-          <HeadSingUpButton type="button" onClick={openModal}>
+          <HeadSingUpButton
+            type="button"
+            onClick={() => {
+              dispatch(authActions.setAuthMode("signup"));
+              openModal();
+            }}
+          >
             会員登録
           </HeadSingUpButton>
-          <HeaderLoginButton type="button">
-            Login
+          <HeaderLoginButton
+            type="button"
+            onClick={() => {
+              dispatch(authActions.setAuthMode("login"));
+              openModal();
+            }}
+          >
+            ログイン
           </HeaderLoginButton>
         </div>
       )}
@@ -115,7 +131,7 @@ const Header: React.FC = () => {
         </HeaderUserProfile>
       )}
       <ModalPortal>
-        <SignUpModal closeModal={closeModal} />
+        <AuthModal closeModal={closeModal} />
       </ModalPortal>
     </Conatainer>
   );
