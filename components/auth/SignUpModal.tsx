@@ -15,6 +15,7 @@ import { signupAPI } from "../../lib/api/auth";
 import { userActions } from "../../store/user";
 import useValidateMode from "../../hook/useValidateMode";
 import PasswordWarning from "./PasswordWarning";
+import { authActions } from "../../store/auth";
 
 interface IProps {
   closeModal: () => void;
@@ -194,6 +195,10 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
+  const changeToLoginModal = () => {
+    dispatch(authActions.setAuthMode("login"));
+  };
+
   useEffect(() => {
     setValidateMode(false);
   }, []);
@@ -309,7 +314,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
           <span
             className="sign-up-modal-set-login"
             role="presentation"
-            onClick={() => {}}
+            onClick={changeToLoginModal}
           >
             ログイン
           </span>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth";
 import CloseXIcon from "../../public/static/svg/modal/modal_close_x_icon.svg";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
 import ClosedEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
@@ -46,6 +48,28 @@ interface IProps {
 }
 
 const LoginModal: React.FC<IProps> = ({ closeModal }) => {
+  const dispatch = useDispatch();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordHided, setIsPasswordHided] = useState(true);
+
+  const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const togglePasswordHiding = () => {
+    setIsPasswordHided(!isPasswordHided);
+  };
+
+  const changeToSignUpModal = () => {
+    dispatch(authActions.setAuthMode("signup"));
+  };
+
   return (
     <Container>
       <CloseXIcon className="mordal-close-x-icon" onClick={closeModal} />
@@ -55,13 +79,22 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
           name="email"
           type="email"
           icon={<MailIcon />}
+          value={email}
+          onChange={onChangeEmail}
         />
       </div>
       <div className="login-input-wrapper sign-up-password-input-wrapper">
         <Input
           placeholder="パスワード"
-          type="password"
-          icon={<ClosedEyeIcon />}
+          name="password"
+          type={isPasswordHided ? "password" : "text"}
+          icon={isPasswordHided ? (
+            <ClosedEyeIcon onClick={togglePasswordHiding} />
+          ) : (
+            <OpenedEyeIcon onClick={togglePasswordHiding} />
+          )}
+          value={password}
+          onChange={onChangePassword}
         />
       </div>
       <div className="login-modal-submit-button-wrapper">
@@ -71,7 +104,11 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
       </div>
       <p>
         Airbnbアカウントがありますか？
-        <span className="login-modal-set-signup">
+        <span
+          className="login-modal-set-signup"
+          role="presentation"
+          onClick={changeToSignUpModal}
+        >
           会員登録
         </span>
       </p>
