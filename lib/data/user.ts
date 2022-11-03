@@ -23,4 +23,9 @@ const write = async (users: StoredUserType[]) => {
   writeFileSync(userDataPath, JSON.stringify(users));
 };
 
-export default { getList, exist, write };
+const find = ({ email, id }: {email?:string, id?: number}) => {
+  const users = getList();
+  return users.find((user) => user.email === email || user.id === id);
+};
+
+export default { getList, exist, write, find };
