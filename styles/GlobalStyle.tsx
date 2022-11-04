@@ -12,6 +12,10 @@ const globalStyle = css`
     font-family: 'Roboto', sans-serif;
     color: ${palette.black};
   }
+  a {
+    text-decoration: none;
+    color: ${palette.black};
+  }
 `;
 
 const GlobalStyle = createGlobalStyle`
