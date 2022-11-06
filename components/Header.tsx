@@ -133,7 +133,7 @@ const Header: React.FC = () => {
       dispatch(userActions.initUser());
       setIsUsermenuOpened(false);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   };
 
