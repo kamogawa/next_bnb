@@ -25,7 +25,15 @@ const registerRoom = createSlice({
       }
       state.largeBuildingType = action.payload;
       return state;
-    }
+    },
+    //* 宿泊種類の変更
+    setBuildingType(state, action: PayloadAction<string>) {
+      if (action.payload === "") {
+        state.buildingType = null;
+      }
+      state.buildingType = action.payload;
+      return state;
+    },
   },
 });
 

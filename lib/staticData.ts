@@ -23,7 +23,44 @@ export const yearsList = Array.from(Array(121), (_, i) => String(2022 - i));
 export const largeBuildingTypeList = [
   "マンション",
   "住宅",
+  "ユニークな宿泊",
   "別荘",
-  "レジデンス",
   "B&B"
+];
+
+//* マンション種類
+export const apartmentBuildingTypeList = [
+  "アパート",
+  "マンション",
+  "共同住宅",
+  "ロフト",
+  "レジデンス"
+];
+
+//* 住宅種類
+export const houseBuildingTypeList = [
+  "住宅",
+  "バンガロー",
+  "ログハウス",
+  "小屋"
+];
+
+//* 別荘種類
+export const secondaryBuildingTypeList = [
+  "ゲストスイート",
+  "農場"
+];
+
+//* ユニークな宿泊種類
+export const uniqueBuildingTypeList = [
+  "納屋",
+  "ボート",
+  "バス"
+];
+
+//* B&B種類
+export const bnbBuildingTypeList = [
+  "B&B",
+  "山岳",
+  "旅館"
 ];

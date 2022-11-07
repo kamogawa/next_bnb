@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { largeBuildingTypeList } from "../../lib/staticData";
@@ -31,11 +31,58 @@ const RegisterRoomBuilding: React.FC = () => {
   const largeBuildingType = useSelector(
     (state) => state.registerRoom.largeBuildingType
   );
+  const buildingType = useSelector((state) => state.registerRoom.buildingType);
+
   const dispatch = useDispatch();
 
   const onChangeLargeBuildingType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(registerRoomActions.setLargeBuildingType(event.target.value));
   };
+  const onChangeBuildingType = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(registerRoomActions.setBuildingType(event.target.value));
+  };
+
+  //* 건물유형 변경하기 Dispatch
+  const setBuildingTypeDispatch = (selected: string) =>
+    dispatch(registerRoomActions.setBuildingType(selected));
+
+  //* 宿泊 options
+  const detailBuildingOptions = useMemo(() => {
+    switch (largeBuildingType) {
+      case "マンション": {
+        const { apartmentBuildingTypeList } = require("../../lib/staticData");
+        setBuildingTypeDispatch(apartmentBuildingTypeList[0]);
+        return apartmentBuildingTypeList;
+      }
+      case "住宅": {
+        const { houseBuildingTypeList } = require("../../lib/staticData");
+        setBuildingTypeDispatch(houseBuildingTypeList[0]);
+        return houseBuildingTypeList;
+      }
+      case "別荘": {
+        const {
+          secondaryBuildingTypeList,
+        } = require("../../lib/staticData");
+        setBuildingTypeDispatch(secondaryBuildingTypeList[0]);
+
+        return secondaryBuildingTypeList;
+      }
+      case "ユニークな宿泊": {
+        const { uniqueBuildingTypeList } = require("../../lib/staticData");
+        setBuildingTypeDispatch(uniqueBuildingTypeList[0]);
+
+        return uniqueBuildingTypeList;
+      }
+      case "B&B": {
+        const { bnbBuildingTypeList } = require("../../lib/staticData");
+        setBuildingTypeDispatch(bnbBuildingTypeList[0]);
+
+        return bnbBuildingTypeList;
+      }
+      default:
+        return [];
+    }
+  }, [largeBuildingType]);
 
   return (
     <Container>
@@ -50,6 +97,16 @@ const RegisterRoomBuilding: React.FC = () => {
           label="範囲を絞ってみましょう"
           options={largeBuildingTypeList}
           onChange={onChangeLargeBuildingType}
+        />
+      </div>
+      <div className="register-room-building-selector-wrapper">
+        <Selector
+          type="register"
+          value={buildingType || undefined}
+          onChange={onChangeBuildingType}
+          disabled={!largeBuildingType}
+          label="宿泊の種類を選んでください。"
+          options={detailBuildingOptions}
         />
       </div>
     </Container>
