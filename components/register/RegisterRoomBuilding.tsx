@@ -6,6 +6,7 @@ import { useSelector } from "../../store";
 import { registerRoomActions } from "../../store/registerRoom";
 import palette from "../../styles/palette";
 import Selector from "../common/Selector";
+import RadioGroup from "../common/RadioGroup";
 
 const Container = styled.div`
   padding: 62px 30px 100px;
@@ -23,7 +24,46 @@ const Container = styled.div`
     width: 320px;
     margin-bottom: 32px;
   }
+  .register-room-room-type-radio {
+    max-width: 485px;
+    margin-bottom: 50px;
+  }
+  .register-room-is-setup-for-guest-radio {
+    margin-bottom: 50px;
+  }
 `;
+
+const roomTypeRadioOptions = [
+  {
+    label: "まるまる貸切",
+    value: "entire",
+    description:
+      "ゲストは宿泊施設全体を他の人と共有することなく、単独で利用します。通常、ベッドルーム、バスルーム、キッチンが含まれます。",
+  },
+  {
+    label: "個室",
+    value: "private",
+    description:
+      "ゲストにプライベートベッドルームを提供します。ベッドルーム以外のスペースは共用です。",
+  },
+  {
+    label: "シェアルーム",
+    value: "public",
+    description:
+      "ゲストはプライベートスペースなしで、他の人と一緒に使用するベッドルームまたは共用エリアに滞在します。",
+  },
+];
+
+const isSetUpForGuestOptions = [
+  {
+    label: "はい、ゲスト用に別に設けられた宿泊施設です。",
+    value: true,
+  },
+  {
+    label: "いいえ、私の個人的なものは宿泊施設にあります。",
+    value: false,
+  },
+];
 
 const disabledLargeBuildingTypeOptions = ["１つ選んでください。"];
 
@@ -32,6 +72,8 @@ const RegisterRoomBuilding: React.FC = () => {
     (state) => state.registerRoom.largeBuildingType
   );
   const buildingType = useSelector((state) => state.registerRoom.buildingType);
+  const roomType = useSelector((state) => state.registerRoom.roomType);
+  const isSetUpForGuest = useSelector((state) => state.registerRoom.isSetUpForGuest);
 
   const dispatch = useDispatch();
 
@@ -40,6 +82,14 @@ const RegisterRoomBuilding: React.FC = () => {
   };
   const onChangeBuildingType = (event: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(registerRoomActions.setBuildingType(event.target.value));
+  };
+  const onChangeRoomType = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = event.target.value;
+    dispatch(registerRoomActions.setRoomType(selected as "entire" | "private" | "public"));
+  };
+  const onChangeIsSetUpForGuest = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = event.target.value === "true";
+    dispatch(registerRoomActions.setIsSetUpForGuest(selected));
   };
 
   //* 건물유형 변경하기 Dispatch
@@ -109,6 +159,26 @@ const RegisterRoomBuilding: React.FC = () => {
           options={detailBuildingOptions}
         />
       </div>
+      {buildingType && (
+        <>
+          <div className="register-room-room-type-radio">
+            <RadioGroup
+              label="ゲストが泊まる予定の宿泊施設の種類を選択してください。"
+              value={roomType}
+              options={roomTypeRadioOptions}
+              onChange={onChangeRoomType}
+            />
+          </div>
+          <div className="register-room-is-setup-for-guest-radio">
+            <RadioGroup
+              label="ゲストのみを使用するように作られた宿泊施設ですか？"
+              value={isSetUpForGuest}
+              options={isSetUpForGuestOptions}
+              onChange={onChangeIsSetUpForGuest}
+            />
+          </div>
+        </>
+      )}
     </Container>
   );
 };
