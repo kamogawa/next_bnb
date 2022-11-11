@@ -7,6 +7,7 @@ import { registerRoomActions } from "../../store/registerRoom";
 import palette from "../../styles/palette";
 import Selector from "../common/Selector";
 import RadioGroup from "../common/RadioGroup";
+import RegisterRoomFooter from "./RegisterRoomFooter";
 
 const Container = styled.div`
   padding: 62px 30px 100px;
@@ -179,6 +180,11 @@ const RegisterRoomBuilding: React.FC = () => {
           </div>
         </>
       )}
+      <RegisterRoomFooter
+        isValid={false}
+        prevHref="/"
+        nextHref="/room/register/bedrooms"
+      />
     </Container>
   );
 };
