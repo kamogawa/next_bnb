@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { BedType } from "../types/room";
 
 //* 숙소 등록 redux state
 export type RegisterRoomState = {
@@ -6,13 +7,28 @@ export type RegisterRoomState = {
   buildingType: string | null;
   roomType: string | null;
   isSetUpForGuest: boolean | null;
+  maximumGuestCount: number;
+  bedroomCount: number;
+  bedCount: number;
+  bedList: { id: number; beds: { type: BedType; count: number }[] }[];
+  publicBedList: { type: BedType; count: number }[];
 };
 
 const initialState: RegisterRoomState = {
   largeBuildingType: null,
   buildingType: null,
   roomType: null,
-  isSetUpForGuest: null
+  isSetUpForGuest: null,
+  //* 最大人数
+  maximumGuestCount: 1,
+  //* ベッドルーム数
+  bedroomCount: 0,
+  //* ベッド数
+  bedCount: 1,
+  //* ベッドタイプ
+  bedList: [],
+  //* 共用ベッド
+  publicBedList: [],
 };
 
 const registerRoom = createSlice({
@@ -41,6 +57,11 @@ const registerRoom = createSlice({
     },
     setIsSetUpForGuest(state, action: PayloadAction<boolean>) {
       state.isSetUpForGuest = action.payload;
+      return state;
+    },
+    //* 最大宿泊人数変更
+    setMaximumGuestCount(state, action: PayloadAction<number>) {
+      state.maximumGuestCount = action.payload;
       return state;
     },
   },
