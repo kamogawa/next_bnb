@@ -64,3 +64,6 @@ export const bnbBuildingTypeList = [
   "山岳",
   "旅館"
 ];
+
+//* 침실 개수
+export const bedroomCountList = Array.from(Array(16), (_, i) => `寝室 ${i}個`);
