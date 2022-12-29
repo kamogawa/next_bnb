@@ -8,6 +8,7 @@ import { registerRoomActions } from "../../store/registerRoom";
 import palette from "../../styles/palette";
 import Counter from "../common/Counter";
 import Selector from "../common/Selector";
+import RegisterRoomBedTypes from "./RegisterRoomBedTypes";
 
 const Container = styled.div`
   padding: 62px 30px 100px;
@@ -41,6 +42,15 @@ const Container = styled.div`
     width: 320px;
     margin-bottom: 57px;
   }
+  .register-room-bed-type-info {
+    margin-top: 6px;
+    margin-bottom: 20px;
+    max-width: 400px;
+    word-break: keep-all;
+  }
+  .register-room-bed-type-list-wrapper {
+    width: 548px;
+  }
 `;
 
 const RegisterRoomBedrooms: React.FC = () => {
@@ -49,6 +59,7 @@ const RegisterRoomBedrooms: React.FC = () => {
   );
   const bedroomCount = useSelector((state) => state.registerRoom.bedroomCount);
   const bedCount = useSelector((state) => state.registerRoom.bedCount);
+  const bedList = useSelector((state) => state.registerRoom.bedList);
 
   const dispatch = useDispatch();
 
@@ -94,6 +105,15 @@ const RegisterRoomBedrooms: React.FC = () => {
           onChange={onChangeBedCount}
         />
       </div>
+      <h4>ベッド種類</h4>
+      <p className="register-room-bed-type-info">
+        すべてのゲストが快適に滞在できるようにベッドが十分に備わっているか確認してください。
+      </p>
+      <ul className="register-room-bed-type-list-wrapper">
+        {bedList.map((bedroom) => (
+          <RegisterRoomBedTypes key={bedroom.id} bedroom={bedroom} />
+        ))}
+      </ul>
     </Container>
   );
 };
