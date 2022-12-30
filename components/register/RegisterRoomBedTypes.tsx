@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
 import RegisterButton from "../common/Button";
 import palette from "../../styles/palette";
 import { BedType } from "../../types/room";
 import Selector from "../common/Selector";
+import { bedTypes } from "../../lib/staticData";
+import Counter from "../common/Counter";
+import { registerRoomActions } from "../../store/registerRoom";
 
 const Container = styled.li`
   width: 100%;
@@ -25,6 +28,18 @@ const Container = styled.li`
   .register-room-bed-type-select-wrapper {
     width: 320px;
   }
+  .register-room-bed-type-counters {
+    width: 320px;
+    margin-top: 30px;
+  }
+  .regigster-room-bed-type-counter {
+    width: 290px;
+    margin-bottom: 20px;
+  }
+  .regigster-room-bed-type-bedroom-counts {
+    font-size: 20px;
+    color: ${palette.gray_76};
+  }
 `;
 
 interface IProps {
@@ -33,6 +48,30 @@ interface IProps {
 
 const RegisterRoomBedTypes: React.FC<IProps> = ({ bedroom }) => {
   const [opened, setOpened] = useState(false);
+  const initialBedOption = bedroom.beds.map((bed) => bed.type);
+  const [activedBedOptions, setActivedBedOptions] = useState<BedType[]>(
+    initialBedOption
+  );
+
+  const dispatch = useDispatch();
+
+  const lastBedOptions = useMemo(() => {
+    return bedTypes.filter((bedType) => !activedBedOptions.includes(bedType));
+  }, [activedBedOptions, bedroom]);
+
+  const onChangeBedTypeCount = (value:number, type: BedType) =>
+    dispatch(
+      registerRoomActions.setBedTypeCount({
+        bedroomId: bedroom.id,
+        type,
+        count: value,
+      })
+    );
+
+  const bedsText = useMemo(() => {
+    const texts = bedroom.beds.map((bed) => `${bed.type} ${bed.count}個`);
+    return texts.join(",");
+  }, [bedroom]);
 
   const totalBedsCount = useMemo(() => {
     let total = 0;
@@ -48,10 +87,12 @@ const RegisterRoomBedTypes: React.FC<IProps> = ({ bedroom }) => {
   return (
     <Container>
       <div className="register-room-bed-type-top">
-        <div>
+        <div className="register-room-bed-type-bedroom-texts">
           <p className="register-room-bed-type-bedroom">{bedroom.id}番 ルーム</p>
           <p className="register-room-bed-type-bedroom-counts">
             ベッド {totalBedsCount}個
+            <br />
+            {bedsText}
           </p>
         </div>
         <RegisterButton onClick={toggleOpened} styleType="register" color="white">
@@ -61,12 +102,32 @@ const RegisterRoomBedTypes: React.FC<IProps> = ({ bedroom }) => {
         </RegisterButton>
       </div>
       {opened && (
-        <div className="register-room-bed-type-select-wrapper">
+        <div className="register-room-bed-type-counters">
+          {activedBedOptions.map((type) => (
+            <div className="regigster-room-bed-type-counter" key={type}>
+              <Counter
+                label={type}
+                value={
+                  bedroom.beds.find((bed) => bed.type === type)?.count || 0
+                }
+                key={type}
+                onChange={(value) => {
+                  onChangeBedTypeCount(value, type);
+                }}
+              />
+            </div>
+          ))}
           <Selector
             type="register"
+            options={lastBedOptions}
             defaultValue="他のベッド追加"
             value="他のベッド追加"
             disabledOptions={["他のベッド追加"]}
+            useValidation={false}
+            onChange={(e) => setActivedBedOptions([
+              ...activedBedOptions,
+              e.target.value as BedType
+            ])}
           />
         </div>
       )}

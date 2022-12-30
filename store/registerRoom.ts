@@ -87,6 +87,28 @@ const registerRoom = createSlice({
       state.bedCount = action.payload;
       return state;
     },
+    //* 침대 유형 갯수 변경하기
+    setBedTypeCount(
+      state,
+      action: PayloadAction<{ bedroomId: number; type: BedType; count: number }>
+    ) {
+      const { bedroomId, type, count } = action.payload;
+
+      const bedroom = state.bedList[bedroomId - 1];
+
+      const prevBeds = bedroom.beds;
+      const index = prevBeds.findIndex((bed) => bed.type === type);
+      if (index === -1) {
+        state.bedList[bedroomId - 1].beds = [...prevBeds, { type, count }];
+        return state;
+      }
+      if (count === 0) {
+        state.bedList[bedroomId - 1].beds.splice(index, 1);
+      } else {
+        state.bedList[bedroomId - 1].beds[index].count = count;
+      }
+      return state;
+    },
   },
 });
 

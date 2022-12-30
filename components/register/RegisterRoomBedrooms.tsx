@@ -9,6 +9,7 @@ import palette from "../../styles/palette";
 import Counter from "../common/Counter";
 import Selector from "../common/Selector";
 import RegisterRoomBedTypes from "./RegisterRoomBedTypes";
+import RegisterRoomFooter from "./RegisterRoomFooter";
 
 const Container = styled.div`
   padding: 62px 30px 100px;
@@ -51,6 +52,7 @@ const Container = styled.div`
   .register-room-bed-type-list-wrapper {
     width: 548px;
   }
+
 `;
 
 const RegisterRoomBedrooms: React.FC = () => {
@@ -114,6 +116,11 @@ const RegisterRoomBedrooms: React.FC = () => {
           <RegisterRoomBedTypes key={bedroom.id} bedroom={bedroom} />
         ))}
       </ul>
+      <RegisterRoomFooter
+        prevHref="/room/register/building"
+        nextHref="/room/register/bathroom"
+        isValid={!!bedroomCount}
+      />
     </Container>
   );
 };

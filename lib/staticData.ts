@@ -1,3 +1,5 @@
+import { BedType } from "../types/room";
+
 export const monthsList = [
   "1月",
   "2月",
@@ -67,3 +69,18 @@ export const bnbBuildingTypeList = [
 
 //* 침실 개수
 export const bedroomCountList = Array.from(Array(16), (_, i) => `寝室 ${i}個`);
+
+//*ベッドタイプ
+export const bedTypes: BedType[] = [
+  "他のベッドを追加",
+  "ソファ",
+  "エアマットレス",
+  "布団",
+  "シングル",
+  "ダブル",
+  "クイーン",
+  "二段ベッド",
+  "ベビーベッド",
+  "ハンモック",
+  "ウォーターベッド"
+];
