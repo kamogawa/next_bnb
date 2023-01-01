@@ -60,7 +60,7 @@ const RegisterRoomFooter: React.FC<IProps> = ({
       <Link href={prevHref || ""}>
         <a className="register-room-footer-back">
           <BackArrowIcon />
-          次へ
+          前へ
         </a>
       </Link>
       <Link href={nextHref || ""}>
@@ -69,7 +69,7 @@ const RegisterRoomFooter: React.FC<IProps> = ({
             color="dark_cyan"
             onClick={onClickNext}
           >
-            前へ
+            次へ
           </Button>
         </a>
       </Link>
